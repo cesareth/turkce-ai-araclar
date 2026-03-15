@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Türkçe AI Araçları</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px 32px; border-bottom: 1px solid #2a2a4a; }
+  header h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
+  header p { color: #888; font-size: 0.9rem; margin-top: 4px; }
+  .badge { display: inline-block; background: #2a2a5a; color: #7b8cde; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-left: 10px; vertical-align: middle; }
+
+  .tabs { display: flex; gap: 4px; padding: 16px 32px 0; background: #0f0f0f; border-bottom: 1px solid #222; overflow-x: auto; }
+  .tab { padding: 10px 20px; border: none; background: transparent; color: #666; font-size: 0.9rem; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
+  .tab:hover { color: #aaa; }
+  .tab.active { color: #7b8cde; border-bottom-color: #7b8cde; font-weight: 600; }
+
+  .content { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+  .card h2 { font-size: 1.1rem; color: #fff; margin-bottom: 6px; }
+  .card p { color: #666; font-size: 0.85rem; margin-bottom: 16px; }
+
+  label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; }
+  textarea { width: 100%; background: #111; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-size: 0.9rem; padding: 12px; resize: vertical; min-height: 140px; font-family: inherit; transition: border-color 0.2s; }
+  textarea:focus { outline: none; border-color: #7b8cde; }
+  select { background: #111; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-size: 0.9rem; padding: 10px 12px; width: 100%; margin-bottom: 12px; }
+
+  .btn { background: #7b8cde; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 12px; }
+  .btn:hover { background: #6a7bcd; }
+  .btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+
+  .result { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px; margin-top: 16px; display: none; }
+  .result.show { display: block; }
+  .result-content { color: #ccc; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; }
+  .result-content h2 { color: #fff; font-size: 1rem; margin: 16px 0 8px; }
+  .result-content h2:first-child { margin-top: 0; }
+
+  .copy-btn { background: #222; border: 1px solid #333; color: #888; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; float: right; }
+  .copy-btn:hover { color: #fff; background: #333; }
+
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #555; border-top-color: #7b8cde; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .tip { background: #1a1a2e; border-left: 3px solid #7b8cde; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.82rem; color: #888; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🇹🇷 Türkçe AI Araçları <span class="badge">agentskills.io</span></h1>
+  <p>KVKK denetimi · Dilekçe oluşturucu · Türkçe düzeltici · Kod yorum yazıcı</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('kvkk', this)">⚖️ KVKK Denetim</button>
+  <button class="tab" onclick="switchTab('dilekce', this)">📄 Dilekçe Oluşturucu</button>
+  <button class="tab" onclick="switchTab('duzeltici', this)">✏️ Türkçe Düzeltici</button>
+  <button class="tab" onclick="switchTab('kod', this)">💻 Kod Yorum Yazıcı</button>
+</div>
+
+<div class="content">
+
+  <!-- KVKK -->
+  <div id="kvkk" class="panel active">
+    <div class="card">
+      <h2>KVKK Uyum Denetimi</h2>
+      <p>Gizlilik politikası, aydınlatma metni veya herhangi bir metni KVKK açısından analiz et.</p>
+      <div class="tip">💡 Web sitenizin gizlilik sayfası metnini, uygulama aydınlatma metninizi veya kullanıcı sözleşmenizi yapıştırın.</div>
+      <label>Denetlenecek metin</label>
+      <textarea id="kvkk-input" placeholder="Gizlilik politikanızı veya aydınlatma metninizi buraya yapıştırın..."></textarea>
+      <button class="btn" onclick="process('kvkk')">Denetle</button>
+      <div class="result" id="kvkk-result">
+        <button class="copy-btn" onclick="copyResult('kvkk')">Kopyala</button>
+        <div class="result-content" id="kvkk-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dilekçe -->
+  <div id="dilekce" class="panel">
+    <div class="card">
+      <h2>Dilekçe ve Resmi Yazı Oluşturucu</h2>
+      <p>Bilgilerinizi girin, imzaya hazır resmi belge oluşturun.</p>
+      <label>Belge türü</label>
+      <select id="dilekce-tip">
+        <option value="genel dilekçe">Genel Dilekçe</option>
+        <option value="SGK hizmet dökümü dilekçesi">SGK Hizmet Dökümü</option>
+        <option value="SGK emeklilik başvurusu">SGK Emeklilik Başvurusu</option>
+        <option value="vergi dairesi itiraz dilekçesi">Vergi Dairesi İtirazı</option>
+        <option value="kira artışı ihtarnamesi">Kira Artışı İhtarnamesi</option>
+        <option value="alacak ihtarnamesi">Alacak İhtarnamesi</option>
+        <option value="iş akdi feshi (istifa)">İstifa Mektubu</option>
+        <option value="iş başvuru mektubu">İş Başvuru Mektubu</option>
+        <option value="okul kayıt dilekçesi">Okul Kayıt Dilekçesi</option>
+      </select>
+      <label>Bilgilerinizi girin</label>
+      <textarea id="dilekce-input" placeholder="Örnek:&#10;Ad Soyad: Ahmet Yılmaz&#10;TC No: 12345678901&#10;Konu: 2019-2023 yılları arasında çalıştığım dönemin hizmet dökümünü talep ediyorum.&#10;Kurum: İstanbul SGK İl Müdürlüğü"></textarea>
+      <button class="btn" onclick="process('dilekce')">Oluştur</button>
+      <div class="result" id="dilekce-result">
+        <button class="copy-btn" onclick="copyResult('dilekce')">Kopyala</button>
+        <div class="result-content" id="dilekce-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Düzeltici -->
+  <div id="duzeltici" class="panel">
+    <div class="card">
+      <h2>Türkçe Metin Düzeltici</h2>
+      <p>TDK kuralları, yabancı kelimeler, üslup ve noktalama düzeltmesi.</p>
+      <div class="tip">💡 E-posta, rapor, sosyal medya gönderisi veya herhangi bir metin girin.</div>
+      <label>Düzeltilecek metin</label>
+      <textarea id="duzeltici-input" placeholder="Metnizi buraya yazın veya yapıştırın..."></textarea>
+      <button class="btn" onclick="process('duzeltici')">Düzelt</button>
+      <div class="result" id="duzeltici-result">
+        <button class="copy-btn" onclick="copyResult('duzeltici')">Kopyala</button>
+        <div class="result-content" id="duzeltici-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kod -->
+  <div id="kod" class="panel">
+    <div class="card">
+      <h2>Kod Yorum Yazıcı</h2>
+      <p>Kodunuza Türkçe yorum satırları ve docstring ekler.</p>
+      <div class="tip">💡 Python, JavaScript, TypeScript, Go veya herhangi bir dilde kod girin.</div>
+      <label>Kod</label>
+      <textarea id="kod-input" style="font-family: 'Courier New', monospace; min-height: 200px;" placeholder="def calculate_total(items):&#10;    total = 0&#10;    for item in items:&#10;        total += item.price&#10;    return total"></textarea>
+      <button class="btn" onclick="process('kod')">Yorum Ekle</button>
+      <div class="result" id="kod-result">
+        <button class="copy-btn" onclick="copyResult('kod')">Kopyala</button>
+        <div class="result-content" id="kod-output" style="font-family: 'Courier New', monospace;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+async function process(tool) {
+  const input = document.getElementById(tool + '-input').value.trim();
+  if (!input) { alert('Lütfen bir metin girin.'); return; }
+
+  const btn = document.querySelector('#' + tool + ' .btn');
+  const resultDiv = document.getElementById(tool + '-result');
+  const outputDiv = document.getElementById(tool + '-output');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>İşleniyor...';
+  resultDiv.classList.remove('show');
+
+  const extra = {};
+  if (tool === 'dilekce') {
+    extra.tip = document.getElementById('dilekce-tip').value;
+  }
+
+  try {
+    const res = await fetch('/api/process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool, input, extra })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      outputDiv.textContent = 'Hata: ' + data.error;
+    } else {
+      outputDiv.innerHTML = formatResult(data.result);
+    }
+    resultDiv.classList.add('show');
+  } catch (e) {
+    outputDiv.textContent = 'Bağlantı hatası. Sunucu çalışıyor mu?';
+    resultDiv.classList.add('show');
+  }
+
+  btn.disabled = false;
+  btn.textContent = getButtonText(tool);
+}
+
+function formatResult(text) {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function getButtonText(tool) {
+  return { kvkk: 'Denetle', dilekce: 'Oluştur', duzeltici: 'Düzelt', kod: 'Yorum Ekle' }[tool];
+}
+
+function copyResult(tool) {
+  const text = document.getElementById(tool + '-output').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#' + tool + '-result .copy-btn');
+    btn.textContent = 'Kopyalandı ✓';
+    setTimeout(() => btn.textContent = 'Kopyala', 2000);
+  });
+}
+</script>
+</body>
+</html>
