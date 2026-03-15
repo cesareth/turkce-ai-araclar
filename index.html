@@ -5,162 +5,899 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Türkçe AI Araçları</title>
 <style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: #2a2a3a;
+    --border2: #3a3a50;
+    --accent: #e63946;
+    --accent2: #ff6b6b;
+    --blue: #4cc9f0;
+    --text: #e8e8f0;
+    --text2: #9090a8;
+    --text3: #5a5a70;
+    --success: #06d6a0;
+    --card-bg: rgba(26, 26, 36, 0.8);
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
 
-  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px 32px; border-bottom: 1px solid #2a2a4a; }
-  header h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
-  header p { color: #888; font-size: 0.9rem; margin-top: 4px; }
-  .badge { display: inline-block; background: #2a2a5a; color: #7b8cde; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-left: 10px; vertical-align: middle; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-  .tabs { display: flex; gap: 4px; padding: 16px 32px 0; background: #0f0f0f; border-bottom: 1px solid #222; overflow-x: auto; }
-  .tab { padding: 10px 20px; border: none; background: transparent; color: #666; font-size: 0.9rem; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
-  .tab:hover { color: #aaa; }
-  .tab.active { color: #7b8cde; border-bottom-color: #7b8cde; font-weight: 600; }
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(230,57,70,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230,57,70,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-  .content { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a0a0f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(230,57,70,0.4);
+  }
+
+  .logo-text h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text p {
+    font-size: 0.75rem;
+    color: var(--text3);
+    margin-top: 1px;
+  }
+
+  .badge {
+    background: rgba(230,57,70,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(230,57,70,0.3);
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* Layout */
+  .layout {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    height: fit-content;
+  }
+
+  .sidebar-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 12px;
+    margin-bottom: 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--text2);
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    margin-bottom: 4px;
+  }
+
+  .nav-item:hover {
+    background: var(--bg3);
+    color: var(--text);
+    border-color: var(--border);
+  }
+
+  .nav-item.active {
+    background: rgba(230,57,70,0.12);
+    color: var(--accent2);
+    border-color: rgba(230,57,70,0.25);
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--bg3);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-icon {
+    background: rgba(230,57,70,0.2);
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  .sidebar-info {
+    padding: 12px;
+    background: var(--bg3);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .sidebar-info p {
+    font-size: 0.75rem;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+  .sidebar-info strong {
+    color: var(--text2);
+  }
+
+  /* Main content */
+  .main {
+    min-width: 0;
+  }
+
   .panel { display: none; }
   .panel.active { display: block; }
 
-  .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-  .card h2 { font-size: 1.1rem; color: #fff; margin-bottom: 6px; }
-  .card p { color: #666; font-size: 0.85rem; margin-bottom: 16px; }
+  /* Panel header */
+  .panel-header {
+    margin-bottom: 20px;
+  }
 
-  label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; }
-  textarea { width: 100%; background: #111; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-size: 0.9rem; padding: 12px; resize: vertical; min-height: 140px; font-family: inherit; transition: border-color 0.2s; }
-  textarea:focus { outline: none; border-color: #7b8cde; }
-  select { background: #111; border: 1px solid #333; border-radius: 8px; color: #e0e0e0; font-size: 0.9rem; padding: 10px 12px; width: 100%; margin-bottom: 12px; }
+  .panel-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
 
-  .btn { background: #7b8cde; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 12px; }
-  .btn:hover { background: #6a7bcd; }
-  .btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+  .panel-header p {
+    color: var(--text2);
+    font-size: 0.88rem;
+  }
 
-  .result { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px; margin-top: 16px; display: none; }
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--border2);
+  }
+
+  /* Tip */
+  .tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: rgba(76, 201, 240, 0.06);
+    border: 1px solid rgba(76, 201, 240, 0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: var(--text2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .tip-icon { flex-shrink: 0; margin-top: 1px; }
+
+  /* Form elements */
+  .field { margin-bottom: 16px; }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .textarea-wrap {
+    position: relative;
+  }
+
+  textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.9rem;
+    padding: 14px;
+    resize: vertical;
+    min-height: 160px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+  }
+
+  textarea.code-font {
+    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.85rem;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(230,57,70,0.1);
+  }
+
+  .char-count {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-size: 0.72rem;
+    color: var(--text3);
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+
+  .char-count.warn { color: var(--accent2); }
+
+  select {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239090a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+
+  select:focus { outline: none; border-color: var(--accent); }
+
+  /* Actions row */
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn:hover { background: #d62d3a; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(230,57,70,0.35); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); background: var(--bg3); }
+
+  .shortcut-hint {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--text3);
+  }
+
+  kbd {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-family: inherit;
+  }
+
+  /* Result */
+  .result {
+    display: none;
+    margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+  }
+
   .result.show { display: block; }
-  .result-content { color: #ccc; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; }
-  .result-content h2 { color: #fff; font-size: 1rem; margin: 16px 0 8px; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(6, 214, 160, 0.06);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--success);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .result-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .copy-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    border-radius: 7px;
+    padding: 5px 13px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .copy-btn:hover { color: var(--text); background: var(--border); }
+  .copy-btn.copied { color: var(--success); border-color: rgba(6, 214, 160, 0.3); }
+
+  .result-body {
+    background: rgba(0,0,0,0.2);
+    padding: 20px;
+  }
+
+  .result-content {
+    color: var(--text2);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .result-content h2 {
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 20px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
   .result-content h2:first-child { margin-top: 0; }
 
-  .copy-btn { background: #222; border: 1px solid #333; color: #888; border-radius: 6px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer; float: right; }
-  .copy-btn:hover { color: #fff; background: #333; }
+  .result-content strong { color: var(--text); font-weight: 600; }
 
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #555; border-top-color: #7b8cde; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+  .result-content code {
+    background: rgba(76,201,240,0.1);
+    border: 1px solid rgba(76,201,240,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 0.85em;
+    color: var(--blue);
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .tip { background: #1a1a2e; border-left: 3px solid #7b8cde; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.82rem; color: #888; margin-bottom: 16px; }
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    color: var(--text);
+    z-index: 1000;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 1rem; }
+
+  /* Mobile tabs */
+  .mobile-tabs {
+    display: none;
+    gap: 4px;
+    padding: 12px 16px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-tabs::-webkit-scrollbar { display: none; }
+
+  .mobile-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text2);
+    font-size: 0.82rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .mobile-tab.active {
+    background: rgba(230,57,70,0.12);
+    border-color: rgba(230,57,70,0.3);
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* Error state */
+  .error-msg {
+    color: var(--accent2);
+    font-size: 0.85rem;
+    padding: 12px 16px;
+    background: rgba(230,57,70,0.08);
+    border: 1px solid rgba(230,57,70,0.2);
+    border-radius: 8px;
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .mobile-tabs { display: flex; }
+    header { padding: 0 16px; }
+    .layout { grid-template-columns: 1fr; padding: 16px; }
+    .sidebar { display: none; }
+    .card { padding: 16px; }
+    .actions { gap: 8px; }
+    .shortcut-hint { display: none; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🇹🇷 Türkçe AI Araçları <span class="badge">agentskills.io</span></h1>
-  <p>KVKK denetimi · Dilekçe oluşturucu · Türkçe düzeltici · Kod yorum yazıcı</p>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🇹🇷</div>
+      <div class="logo-text">
+        <h1>Türkçe AI Araçları</h1>
+        <p>Claude ile güçlendirilmiş · 4 araç</p>
+      </div>
+    </div>
+    <span class="badge">agentskills.io</span>
+  </div>
 </header>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('kvkk', this)">⚖️ KVKK Denetim</button>
-  <button class="tab" onclick="switchTab('dilekce', this)">📄 Dilekçe Oluşturucu</button>
-  <button class="tab" onclick="switchTab('duzeltici', this)">✏️ Türkçe Düzeltici</button>
-  <button class="tab" onclick="switchTab('kod', this)">💻 Kod Yorum Yazıcı</button>
+<!-- Mobile tabs -->
+<div class="mobile-tabs">
+  <button class="mobile-tab active" onclick="switchTab('kvkk', this)">⚖️ KVKK</button>
+  <button class="mobile-tab" onclick="switchTab('dilekce', this)">📄 Dilekçe</button>
+  <button class="mobile-tab" onclick="switchTab('duzeltici', this)">✏️ Düzeltici</button>
+  <button class="mobile-tab" onclick="switchTab('kod', this)">💻 Kod</button>
 </div>
 
-<div class="content">
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-label">Araçlar</div>
 
-  <!-- KVKK -->
-  <div id="kvkk" class="panel active">
-    <div class="card">
-      <h2>KVKK Uyum Denetimi</h2>
-      <p>Gizlilik politikası, aydınlatma metni veya herhangi bir metni KVKK açısından analiz et.</p>
-      <div class="tip">💡 Web sitenizin gizlilik sayfası metnini, uygulama aydınlatma metninizi veya kullanıcı sözleşmenizi yapıştırın.</div>
-      <label>Denetlenecek metin</label>
-      <textarea id="kvkk-input" placeholder="Gizlilik politikanızı veya aydınlatma metninizi buraya yapıştırın..."></textarea>
-      <button class="btn" onclick="process('kvkk')">Denetle</button>
-      <div class="result" id="kvkk-result">
-        <button class="copy-btn" onclick="copyResult('kvkk')">Kopyala</button>
-        <div class="result-content" id="kvkk-output"></div>
+    <button class="nav-item active" onclick="switchTab('kvkk', this)" data-nav>
+      <span class="nav-icon">⚖️</span>
+      KVKK Denetim
+    </button>
+    <button class="nav-item" onclick="switchTab('dilekce', this)" data-nav>
+      <span class="nav-icon">📄</span>
+      Dilekçe Oluşturucu
+    </button>
+    <button class="nav-item" onclick="switchTab('duzeltici', this)" data-nav>
+      <span class="nav-icon">✏️</span>
+      Türkçe Düzeltici
+    </button>
+    <button class="nav-item" onclick="switchTab('kod', this)" data-nav>
+      <span class="nav-icon">💻</span>
+      Kod Yorum Yazıcı
+    </button>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-info">
+      <p><strong>Nasıl kullanılır?</strong><br>Bir araç seçin, metninizi girin ve işleyin. Sonucu kopyalayabilirsiniz.</p>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- KVKK -->
+    <div id="kvkk" class="panel active">
+      <div class="panel-header">
+        <h2>⚖️ KVKK Uyum Denetimi</h2>
+        <p>Gizlilik politikası veya aydınlatma metnini KVKK maddeleri bazında analiz eder.</p>
+      </div>
+      <div class="card">
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <span>Web sitenizin gizlilik sayfası, uygulama aydınlatma metni veya kullanıcı sözleşmesini yapıştırın. Madde bazında uyum raporu çıkarılır.</span>
+        </div>
+        <div class="field">
+          <label>Denetlenecek metin</label>
+          <div class="textarea-wrap">
+            <textarea id="kvkk-input" placeholder="Gizlilik politikanızı veya aydınlatma metninizi buraya yapıştırın..." oninput="updateCharCount(this, 'kvkk-count')"></textarea>
+            <span class="char-count" id="kvkk-count">0 karakter</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="process('kvkk')">
+            Denetle
+          </button>
+          <button class="btn-ghost" onclick="fillExample('kvkk')">Örnek metin</button>
+          <span class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        </div>
+        <div class="result" id="kvkk-result">
+          <div class="result-header">
+            <div class="result-label"><div class="result-dot"></div> Sonuç</div>
+            <button class="copy-btn" id="kvkk-copy" onclick="copyResult('kvkk')">Kopyala</button>
+          </div>
+          <div class="result-body">
+            <div class="result-content" id="kvkk-output"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Dilekçe -->
-  <div id="dilekce" class="panel">
-    <div class="card">
-      <h2>Dilekçe ve Resmi Yazı Oluşturucu</h2>
-      <p>Bilgilerinizi girin, imzaya hazır resmi belge oluşturun.</p>
-      <label>Belge türü</label>
-      <select id="dilekce-tip">
-        <option value="genel dilekçe">Genel Dilekçe</option>
-        <option value="SGK hizmet dökümü dilekçesi">SGK Hizmet Dökümü</option>
-        <option value="SGK emeklilik başvurusu">SGK Emeklilik Başvurusu</option>
-        <option value="vergi dairesi itiraz dilekçesi">Vergi Dairesi İtirazı</option>
-        <option value="kira artışı ihtarnamesi">Kira Artışı İhtarnamesi</option>
-        <option value="alacak ihtarnamesi">Alacak İhtarnamesi</option>
-        <option value="iş akdi feshi (istifa)">İstifa Mektubu</option>
-        <option value="iş başvuru mektubu">İş Başvuru Mektubu</option>
-        <option value="okul kayıt dilekçesi">Okul Kayıt Dilekçesi</option>
-      </select>
-      <label>Bilgilerinizi girin</label>
-      <textarea id="dilekce-input" placeholder="Örnek:&#10;Ad Soyad: Ahmet Yılmaz&#10;TC No: 12345678901&#10;Konu: 2019-2023 yılları arasında çalıştığım dönemin hizmet dökümünü talep ediyorum.&#10;Kurum: İstanbul SGK İl Müdürlüğü"></textarea>
-      <button class="btn" onclick="process('dilekce')">Oluştur</button>
-      <div class="result" id="dilekce-result">
-        <button class="copy-btn" onclick="copyResult('dilekce')">Kopyala</button>
-        <div class="result-content" id="dilekce-output"></div>
+    <!-- Dilekçe -->
+    <div id="dilekce" class="panel">
+      <div class="panel-header">
+        <h2>📄 Dilekçe ve Resmi Yazı Oluşturucu</h2>
+        <p>Bilgilerinizi girin, imzaya hazır resmi belge oluşturun.</p>
+      </div>
+      <div class="card">
+        <div class="field">
+          <label>Belge türü</label>
+          <select id="dilekce-tip">
+            <option value="genel dilekçe">📝 Genel Dilekçe</option>
+            <option value="SGK hizmet dökümü dilekçesi">🏥 SGK Hizmet Dökümü</option>
+            <option value="SGK emeklilik başvurusu">👴 SGK Emeklilik Başvurusu</option>
+            <option value="vergi dairesi itiraz dilekçesi">🧾 Vergi Dairesi İtirazı</option>
+            <option value="kira artışı ihtarnamesi">🏠 Kira Artışı İhtarnamesi</option>
+            <option value="alacak ihtarnamesi">💰 Alacak İhtarnamesi</option>
+            <option value="iş akdi feshi (istifa)">🚪 İstifa Mektubu</option>
+            <option value="iş başvuru mektubu">💼 İş Başvuru Mektubu</option>
+            <option value="okul kayıt dilekçesi">🎓 Okul Kayıt Dilekçesi</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bilgilerinizi girin</label>
+          <div class="textarea-wrap">
+            <textarea id="dilekce-input" placeholder="Örnek:&#10;Ad Soyad: Ahmet Yılmaz&#10;TC No: 12345678901&#10;Konu: 2019-2023 yılları arasında çalıştığım dönemin hizmet dökümünü talep ediyorum.&#10;Kurum: İstanbul SGK İl Müdürlüğü" oninput="updateCharCount(this, 'dilekce-count')"></textarea>
+            <span class="char-count" id="dilekce-count">0 karakter</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="process('dilekce')">Oluştur</button>
+          <button class="btn-ghost" onclick="fillExample('dilekce')">Örnek bilgi</button>
+          <span class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        </div>
+        <div class="result" id="dilekce-result">
+          <div class="result-header">
+            <div class="result-label"><div class="result-dot"></div> Sonuç</div>
+            <button class="copy-btn" id="dilekce-copy" onclick="copyResult('dilekce')">Kopyala</button>
+          </div>
+          <div class="result-body">
+            <div class="result-content" id="dilekce-output"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Düzeltici -->
-  <div id="duzeltici" class="panel">
-    <div class="card">
-      <h2>Türkçe Metin Düzeltici</h2>
-      <p>TDK kuralları, yabancı kelimeler, üslup ve noktalama düzeltmesi.</p>
-      <div class="tip">💡 E-posta, rapor, sosyal medya gönderisi veya herhangi bir metin girin.</div>
-      <label>Düzeltilecek metin</label>
-      <textarea id="duzeltici-input" placeholder="Metnizi buraya yazın veya yapıştırın..."></textarea>
-      <button class="btn" onclick="process('duzeltici')">Düzelt</button>
-      <div class="result" id="duzeltici-result">
-        <button class="copy-btn" onclick="copyResult('duzeltici')">Kopyala</button>
-        <div class="result-content" id="duzeltici-output"></div>
+    <!-- Düzeltici -->
+    <div id="duzeltici" class="panel">
+      <div class="panel-header">
+        <h2>✏️ Türkçe Metin Düzeltici</h2>
+        <p>TDK kuralları, yabancı kelimeler, üslup ve noktalama düzeltmesi.</p>
+      </div>
+      <div class="card">
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <span>E-posta, rapor, sosyal medya gönderisi veya herhangi bir metin girin. Yazım, noktalama ve üslup hataları düzeltilir.</span>
+        </div>
+        <div class="field">
+          <label>Düzeltilecek metin</label>
+          <div class="textarea-wrap">
+            <textarea id="duzeltici-input" placeholder="Metnizi buraya yazın veya yapıştırın..." oninput="updateCharCount(this, 'duzeltici-count')"></textarea>
+            <span class="char-count" id="duzeltici-count">0 karakter</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="process('duzeltici')">Düzelt</button>
+          <button class="btn-ghost" onclick="fillExample('duzeltici')">Örnek metin</button>
+          <span class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        </div>
+        <div class="result" id="duzeltici-result">
+          <div class="result-header">
+            <div class="result-label"><div class="result-dot"></div> Sonuç</div>
+            <button class="copy-btn" id="duzeltici-copy" onclick="copyResult('duzeltici')">Kopyala</button>
+          </div>
+          <div class="result-body">
+            <div class="result-content" id="duzeltici-output"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Kod -->
-  <div id="kod" class="panel">
-    <div class="card">
-      <h2>Kod Yorum Yazıcı</h2>
-      <p>Kodunuza Türkçe yorum satırları ve docstring ekler.</p>
-      <div class="tip">💡 Python, JavaScript, TypeScript, Go veya herhangi bir dilde kod girin.</div>
-      <label>Kod</label>
-      <textarea id="kod-input" style="font-family: 'Courier New', monospace; min-height: 200px;" placeholder="def calculate_total(items):&#10;    total = 0&#10;    for item in items:&#10;        total += item.price&#10;    return total"></textarea>
-      <button class="btn" onclick="process('kod')">Yorum Ekle</button>
-      <div class="result" id="kod-result">
-        <button class="copy-btn" onclick="copyResult('kod')">Kopyala</button>
-        <div class="result-content" id="kod-output" style="font-family: 'Courier New', monospace;"></div>
+    <!-- Kod -->
+    <div id="kod" class="panel">
+      <div class="panel-header">
+        <h2>💻 Kod Yorum Yazıcı</h2>
+        <p>Kodunuza Türkçe yorum satırları ve docstring ekler.</p>
+      </div>
+      <div class="card">
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <span>Python, JavaScript, TypeScript, Go veya herhangi bir dilde kod girin. Her fonksiyon ve karmaşık bölüme Türkçe açıklama eklenir.</span>
+        </div>
+        <div class="field">
+          <label>Kod</label>
+          <div class="textarea-wrap">
+            <textarea id="kod-input" class="code-font" style="min-height: 220px;" placeholder="def calculate_total(items):&#10;    total = 0&#10;    for item in items:&#10;        total += item.price&#10;    return total" oninput="updateCharCount(this, 'kod-count')"></textarea>
+            <span class="char-count" id="kod-count">0 karakter</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="process('kod')">Yorum Ekle</button>
+          <button class="btn-ghost" onclick="fillExample('kod')">Örnek kod</button>
+          <span class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        </div>
+        <div class="result" id="kod-result">
+          <div class="result-header">
+            <div class="result-label"><div class="result-dot"></div> Sonuç</div>
+            <button class="copy-btn" id="kod-copy" onclick="copyResult('kod')">Kopyala</button>
+          </div>
+          <div class="result-body">
+            <div class="result-content code-font" id="kod-output"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon"></span>
+  <span id="toast-msg"></span>
 </div>
 
 <script>
+let currentTab = 'kvkk';
+
 function switchTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+  currentTab = id;
+
+  // Sidebar
+  document.querySelectorAll('[data-nav]').forEach(n => n.classList.remove('active'));
+  // Mobile tabs
+  document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+
+  // Find matching nav/tab
+  document.querySelectorAll(`[data-nav], .mobile-tab`).forEach(el => {
+    if (el.getAttribute('onclick')?.includes(`'${id}'`)) {
+      el.classList.add('active');
+    }
+  });
+}
+
+function updateCharCount(el, countId) {
+  const count = el.value.length;
+  const span = document.getElementById(countId);
+  if (!span) return;
+  span.textContent = count.toLocaleString('tr') + ' karakter';
+  span.className = 'char-count' + (count > 4000 ? ' warn' : '');
+}
+
+// Ctrl+Enter shortcut
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    const active = document.querySelector('.panel.active');
+    if (active) process(active.id);
+  }
+});
+
+const examples = {
+  kvkk: `GİZLİLİK POLİTİKASI
+
+Bu politika, XYZ Yazılım A.Ş. olarak kişisel verilerinizi nasıl işlediğimizi açıklamaktadır.
+
+Toplanan veriler: Ad, soyad, e-posta adresi, telefon numarası, IP adresi.
+Amaç: Hizmet sunumu ve müşteri desteği.
+Üçüncü taraflarla paylaşım: Ödeme işlemcisi ve analitik hizmet sağlayıcıları ile paylaşılabilir.
+Saklama süresi: Hizmet süresi boyunca + 3 yıl.
+İletişim: privacy@xyz.com`,
+
+  dilekce: `Ad Soyad: Mehmet Yılmaz
+TC No: 12345678901
+Adres: Kadıköy, İstanbul
+Konu: SGK hizmet döküm belgesi talebi
+Tarih: ${new Date().toLocaleDateString('tr-TR')}
+Kurum: İstanbul SGK İl Müdürlüğü
+Notlar: 2018-2024 yılları arasında çalıştım, emeklilik hesabı için belge gerekiyor.`,
+
+  duzeltici: `merhaba arkadaşlar bu mesajı okuyorsanız lütfen toplantıya katılın yarın saat 10 da meeting var herkes hazır olsun presentation hazırladım çok nice oldu bence feedback bekliyorum teşekkürler`,
+
+  kod: `def fetch_user_data(user_id, include_orders=False):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise ValueError(f"User {user_id} not found")
+    result = {"id": user.id, "name": user.name, "email": user.email}
+    if include_orders:
+        orders = db.query(Order).filter(Order.user_id == user_id).all()
+        result["orders"] = [{"id": o.id, "total": o.total} for o in orders]
+    return result`
+};
+
+function fillExample(tool) {
+  const el = document.getElementById(tool + '-input');
+  el.value = examples[tool];
+  updateCharCount(el, tool + '-count');
+  el.focus();
+  showToast('💡', 'Örnek metin yüklendi');
 }
 
 async function process(tool) {
   const input = document.getElementById(tool + '-input').value.trim();
-  if (!input) { alert('Lütfen bir metin girin.'); return; }
+  if (!input) {
+    showToast('⚠️', 'Lütfen bir metin girin');
+    return;
+  }
 
   const btn = document.querySelector('#' + tool + ' .btn');
   const resultDiv = document.getElementById(tool + '-result');
   const outputDiv = document.getElementById(tool + '-output');
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>İşleniyor...';
+  btn.innerHTML = '<span class="spinner"></span> İşleniyor...';
   resultDiv.classList.remove('show');
 
   const extra = {};
@@ -177,25 +914,35 @@ async function process(tool) {
     const data = await res.json();
 
     if (data.error) {
-      outputDiv.textContent = 'Hata: ' + data.error;
+      outputDiv.innerHTML = `<div class="error-msg">Hata: ${escapeHtml(data.error)}</div>`;
     } else {
       outputDiv.innerHTML = formatResult(data.result);
     }
     resultDiv.classList.add('show');
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (e) {
-    outputDiv.textContent = 'Bağlantı hatası. Sunucu çalışıyor mu?';
+    outputDiv.innerHTML = `<div class="error-msg">Bağlantı hatası. Sunucu çalışıyor mu?</div>`;
     resultDiv.classList.add('show');
   }
 
   btn.disabled = false;
   btn.textContent = getButtonText(tool);
+
+  // Reset copy button
+  const copyBtn = document.getElementById(tool + '-copy');
+  if (copyBtn) { copyBtn.textContent = 'Kopyala'; copyBtn.className = 'copy-btn'; }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function formatResult(text) {
-  return text
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  return escapeHtml(text)
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    .replace(/^### (.+)$/gm, '<h3 style="color:var(--text);font-size:.9rem;margin:14px 0 6px;">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
 }
 
 function getButtonText(tool) {
@@ -205,10 +952,25 @@ function getButtonText(tool) {
 function copyResult(tool) {
   const text = document.getElementById(tool + '-output').innerText;
   navigator.clipboard.writeText(text).then(() => {
-    const btn = document.querySelector('#' + tool + '-result .copy-btn');
-    btn.textContent = 'Kopyalandı ✓';
-    setTimeout(() => btn.textContent = 'Kopyala', 2000);
+    const btn = document.getElementById(tool + '-copy');
+    btn.textContent = '✓ Kopyalandı';
+    btn.classList.add('copied');
+    showToast('✅', 'Panoya kopyalandı');
+    setTimeout(() => {
+      btn.textContent = 'Kopyala';
+      btn.classList.remove('copied');
+    }, 2500);
   });
+}
+
+let toastTimer;
+function showToast(icon, msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.querySelector('.toast-icon').textContent = icon;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 </script>
 </body>
